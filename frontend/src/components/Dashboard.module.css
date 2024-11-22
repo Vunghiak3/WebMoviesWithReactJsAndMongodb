@@ -1,0 +1,357 @@
+.wrapper {
+  padding: 40px 20px;
+  background-color: #0f1416;
+  max-width: var(--max-width-layout);
+  margin: 10px auto;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.search {
+  width: 700px;
+  border: 1px solid gray;
+}
+
+.search input {
+  width: 100%;
+}
+
+.btnAdd {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: rgb(20, 144, 233);
+  color: white;
+}
+
+.btnAdd:hover {
+  background-color: rgb(61, 174, 254);
+}
+
+.btnAdd:active {
+  background-color: rgb(20, 144, 233);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.table td img {
+  width: 80px;
+  height: auto;
+  border-radius: 4px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.table td p {
+  margin: 0;
+}
+
+.table td button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  background-color: #007bff;
+  color: #fff;
+}
+
+.table td button:hover {
+  background-color: #0056b3;
+}
+
+.table td button:last-child {
+  background-color: #dc3545;
+}
+
+.table td button:last-child:hover {
+  background-color: #a71d2a;
+}
+
+.movieItem {
+  display: flex;
+  align-items: center;
+}
+
+.movieItem p {
+  font-size: 2rem;
+}
+
+.detailMovie {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.overlay {
+  position: fixed;
+  z-index: 11;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.content {
+  position: fixed;
+  z-index: 12;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #263238;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 1300px;
+  height: 850px;
+}
+
+.closeDetailMovie {
+  position: fixed;
+  z-index: 11;
+  right: 0;
+  top: 20px;
+  right: 20px;
+  background-color: rgb(221, 21, 21);
+  padding: 3px 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 2rem;
+  color: white;
+}
+
+.closeDetailMovie:hover {
+  background-color: rgb(248, 44, 44);
+}
+
+.wrapperDetailMovie {
+  padding: 20px;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  font-size: 1.8rem;
+}
+
+.innerMovieDetail {
+  display: flex;
+  gap: 50px;
+}
+
+.imgDetailMovie {
+  flex: 0.4;
+}
+
+.imgDetailMovie img {
+  width: 100%;
+}
+
+.contentDetailMovie {
+  flex: 1;
+}
+
+.titleDetailMovie {
+  color: #8b5cf6;
+  margin: 5px 0;
+  font-size: 2.2rem;
+}
+
+.tableDetailMovie {
+  text-align: left;
+  border-collapse: collapse;
+  width: 100%;
+  color: rgb(187, 185, 185);
+}
+
+.tableDetailMovie tr th {
+  width: 200px;
+  font-weight: normal;
+}
+
+.tableDetailMovie tr > * {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.493);
+  padding: 5px;
+}
+
+.descriptionDetailMovie,
+.episodeDetailMovie {
+  margin-top: 20px;
+}
+
+.descriptionDetailMovie h2,
+.episodeDetailMovie h2 {
+  color: #ff8802;
+}
+
+.descriptionDetailMovie p {
+  color: rgb(187, 185, 185);
+}
+
+.listButton {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.listButton button {
+  cursor: pointer;
+  width: 30px;
+  height: 35px;
+  border-radius: 3px;
+  font-size: 1.6rem;
+  transition: all linear 0.1s;
+}
+
+.listButton button:hover {
+  background-color: #ff8802;
+  color: white;
+}
+
+/* css update movie */
+.headerUpdate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerUpdate button {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1.6rem;
+  background-color: white;
+}
+
+.activeLog {
+  background-color: #0056b3!important;
+  color: white;
+}
+
+.tableUpdate {
+  width: 90%;
+  padding: 20px 10px;
+}
+
+.wrapperUpdate {
+  padding: 20px;
+}
+
+.groupUpdate th:first-child {
+  text-align: left;
+  width: 200px;
+}
+.groupUpdate th:last-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.groupUpdate th:last-child img {
+  width: 100px;
+}
+.groupUpdate label {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.groupUpdate input,
+textarea {
+  background-color: rgba(255, 255, 255, 0.781);
+  border: 1px solid gray;
+  padding: 5px 10px;
+  font-size: 1.8rem;
+  color: black;
+}
+
+textarea {
+  resize: vertical;
+  width: 100%;
+  font-size: 1.8rem;
+  outline: none;
+  height: auto;
+}
+
+.functionUpdate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: right;
+  margin-top: 20px;
+}
+
+.btnCancelUpdate,
+.btnRemoveEpisode {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btnCancelUpdate:hover,
+.btnRemoveEpisode:hover {
+  background-color: #d32f2f;
+}
+
+.btnUpdate {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btnUpdate:hover {
+  background-color: #388e3c;
+}
+
+.btnRemoveEpisode {
+  font-size: 1.4rem;
+  padding: 5px 10px;
+  margin-left: 10px;
+}
+
+.btnAddNewEpisode {
+  padding: 5px 10px;
+  padding: 5px 10px;
+  margin-left: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
