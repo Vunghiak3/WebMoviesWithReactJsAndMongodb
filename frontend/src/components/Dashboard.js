@@ -42,8 +42,27 @@ export default function DashboardPage() {
     setCurrentMode("add");
   };
 
-  const handleRemoveMovie = (id) => {
-    console.log("🚀 ~ handleRemoveMovie ~ id:", id);
+  const handleRemoveMovie = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/movies/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error:", errorData.message);
+        alert(`Error: ${errorData.message}`);
+        return;
+      }
+
+      const result = await response.json();
+      setMovies((prevMovies) => prevMovies.filter((movie) => movie._id !== id));
+      console.log("Movie deleted successfully:", result);
+      alert("Movie deleted successfully!");
+    } catch (error) {
+      console.error("An error occurred while deleting the movie:", error);
+      alert("An error occurred while deleting the movie. Please try again.");
+    }
   };
 
   return (
@@ -232,7 +251,6 @@ export function UpdateMovie({ movie, setMovies }) {
       category: category.split(",").map((item) => item.trim()),
       country: country.split(",").map((item) => item.trim()),
       actor: actor.split(",").map((item) => item.trim()),
-      episode,
     };
 
     try {
@@ -331,6 +349,41 @@ export function UpdateMovie({ movie, setMovies }) {
       console.error("Error adding episode:", error);
     }
   };
+
+  const handleUpdateEpisode = async () => {
+    const updateEpisode = {
+      episode,
+    };
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/movies/${movie._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateEpisode),
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        setMessage("Cập nhật tập phim thành công!");
+        console.log("Updated movie:", result);
+        setMovies((prevMovies) =>
+          prevMovies.map((movie) => (movie._id === result._id ? result : movie))
+        );
+      } else {
+        setMessage("Cập nhật tập phim thất bại!");
+        console.error("Update failed:", response.statusText);
+      }
+    } catch (error) {
+      setMessage("Cập nhật tập phim không thành công!");
+      console.error("Error during update:", error);
+    }
+  };
+
   return (
     <div className={styles.wrapperUpdate}>
       <div className={styles.headerUpdate}>
@@ -462,6 +515,15 @@ export function UpdateMovie({ movie, setMovies }) {
                   />
                 </th>
               </tr>
+              <tr>
+                <th></th>
+                <th className={styles.functionUpdate}>
+                  <button className={styles.btnCancelUpdate}>Hủy</button>
+                  <button className={styles.btnUpdate} onClick={handleUpdate}>
+                    Cập nhật
+                  </button>
+                </th>
+              </tr>
             </>
           ) : (
             <>
@@ -488,11 +550,19 @@ export function UpdateMovie({ movie, setMovies }) {
                   </th>
                   <th>
                     <button
-                      className={styles.btnRemoveEpisode}
-                      onClick={() => handleRemove(item._id)}
+                      className={styles.btnUpdateEpisode}
+                      onClick={handleUpdateEpisode}
                     >
-                      Xóa
+                      Sửa
                     </button>
+                    {index === episode.length - 1 && (
+                      <button
+                        className={styles.btnRemoveEpisode}
+                        onClick={() => handleRemove(item._id)}
+                      >
+                        Xóa
+                      </button>
+                    )}
                   </th>
                 </tr>
               ))}
@@ -518,15 +588,6 @@ export function UpdateMovie({ movie, setMovies }) {
               </tr>
             </>
           )}
-          <tr>
-            <th></th>
-            <th className={styles.functionUpdate}>
-              <button className={styles.btnCancelUpdate}>Hủy</button>
-              <button className={styles.btnUpdate} onClick={handleUpdate}>
-                Cập nhật
-              </button>
-            </th>
-          </tr>
         </tbody>
       </table>
       {message && <p>{message}</p>}
@@ -556,7 +617,6 @@ export function AddMovie() {
       country: country.split(",").map((item) => item.trim()),
       actor: actor.split(",").map((item) => item.trim()),
     };
-    console.log("🚀 ~ handleAddNewMovie ~ newMovie:", newMovie);
     try {
       const response = await fetch("http://localhost:5000/movies", {
         method: "POST",
@@ -568,8 +628,14 @@ export function AddMovie() {
       if (response.ok) {
         const result = await response.json();
         console.log("Add new movie:", result);
+        alert("Thêm phim thành công!");
       } else {
-        console.error("Add new movie failed:", response.statusText);
+        const error = await response.json();
+        if (error.field) {
+          alert(`Error: ${error.message}`);
+        } else {
+          console.error("Add new movie failed:", response.statusText);
+        }
       }
     } catch (error) {
       console.log(error);

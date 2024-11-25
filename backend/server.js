@@ -42,6 +42,26 @@ app.put("/movies/:id", async (req, res) => {
   }
 });
 
+app.delete("/movies/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const movie = await Movies.findByIdAndDelete(id);
+
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.status(200).json({ message: "Movie deleted successfully", movie });
+  } catch (error) {
+    console.error("Error deleting movie:", error);
+    res.status(500).json({
+      message: "An error occurred while deleting the movie",
+      error: error.message,
+    });
+  }
+});
+
 app.delete("/movies/:movieId/episode/:episodeId", async (req, res) => {
   try {
     const { movieId, episodeId } = req.params;
@@ -104,9 +124,21 @@ app.post("/movies/:movieId/episode", async (req, res) => {
 });
 
 app.post("/movies", async (req, res) => {
-  const movies = new Movies(req.body);
-  await movies.save();
-  res.json(movies);
+  try {
+    const movies = new Movies(req.body);
+    await movies.save();
+    res.status(201).json(movies);
+  } catch (error) {
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      res.status(400).json({
+        message: `Phim '${error.keyValue[field]}' đã tồn tại. Vui lòng nhập phim khác!`,
+        field: field,
+      });
+    } else {
+      res.status(500).json({ message: "An error occurred", error });
+    }
+  }
 });
 
 app.listen(5000, () =>
