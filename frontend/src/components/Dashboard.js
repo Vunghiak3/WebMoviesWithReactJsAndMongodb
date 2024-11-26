@@ -244,7 +244,7 @@ export function UpdateMovie({ movie, setMovies, setMode }) {
     setUpdateEpisode(episodeLink);
   };
 
-  const handleUpdate = async () => {
+  const handleUpdateMovie = async () => {
     const updateMovie = {
       name,
       slug: toSlug(name),
@@ -285,7 +285,7 @@ export function UpdateMovie({ movie, setMovies, setMode }) {
     }
   };
 
-  const handleRemove = async (episodeId) => {
+  const handleRemoveEpisode = async (episodeId) => {
     try {
       const response = await fetch(
         `http://localhost:5000/movies/${movie._id}/episode/${episodeId}`,
@@ -495,7 +495,10 @@ export function UpdateMovie({ movie, setMovies, setMode }) {
                   >
                     Hủy
                   </button>
-                  <button className={styles.btnUpdate} onClick={handleUpdate}>
+                  <button
+                    className={styles.btnUpdate}
+                    onClick={handleUpdateMovie}
+                  >
                     Cập nhật
                   </button>
                 </th>
@@ -534,7 +537,7 @@ export function UpdateMovie({ movie, setMovies, setMode }) {
                     {index === episode.length - 1 && (
                       <button
                         className={styles.btnRemoveEpisode}
-                        onClick={() => handleRemove(item._id)}
+                        onClick={() => handleRemoveEpisode(item._id)}
                       >
                         Xóa
                       </button>
