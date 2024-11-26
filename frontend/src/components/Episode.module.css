@@ -1,0 +1,28 @@
+.episodeDetailMovie {
+    margin-top: 20px;
+}
+
+.episodeDetailMovie h2 {
+    color: #ff8802;
+}
+
+.listButton {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.listButton button {
+    cursor: pointer;
+    width: 30px;
+    height: 35px;
+    border-radius: 3px;
+    font-size: 1.6rem;
+    transition: all linear 0.1s;
+}
+
+.listButton button:hover {
+    background-color: #ff8802;
+    color: white;
+}
