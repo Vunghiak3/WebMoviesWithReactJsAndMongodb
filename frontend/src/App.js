@@ -2,6 +2,7 @@ import DashboardPage from "./components/Dashboard";
 import { Header } from "./components/Header";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MoviePage from "./components/MoviePage";
+import WatchMovie from "./components/WatchMovie";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/phim/:slug" element={<MoviePage />} />
-          <Route path="/phim/:slug/:tapphim" element={<DashboardPage />} />
+          <Route path="/phim/:slug/:tapphim" element={<WatchMovie />} />
         </Routes>
       </Router>
     </div>

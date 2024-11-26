@@ -21,7 +21,7 @@ function MoviePage() {
     }, [slug])
 
     return (
-        <div style={{ backgroundColor: "#0f1416", margin: 10 }}>
+        <div style={{ backgroundColor: "#0f1416", margin: "10px auto", maxWidth: 1300 }}>
             <DetailMovie movie={moive} />
         </div>
     );

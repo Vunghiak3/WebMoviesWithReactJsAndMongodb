@@ -1,0 +1,36 @@
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  background-color: #0f1416;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.wrapperMovie {
+  height: 600px;
+}
+
+.movie {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.actionsMovie {
+  margin: 10px 0;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  gap: 10px;
+}
+
+button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
