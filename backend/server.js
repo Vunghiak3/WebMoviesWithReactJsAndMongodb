@@ -43,6 +43,7 @@ app.get("/movies", async (req, res) => {
   res.json(movies);
 });
 
+//cập nhật phim
 app.put("/movies/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -63,6 +64,28 @@ app.put("/movies/:id", async (req, res) => {
   }
 });
 
+//xóa phim
+app.delete("/movies/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const movie = await Movies.findByIdAndDelete(id);
+
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.status(200).json({ message: "Movie deleted successfully", movie });
+  } catch (error) {
+    console.error("Error deleting movie:", error);
+    res.status(500).json({
+      message: "An error occurred while deleting the movie",
+      error: error.message,
+    });
+  }
+});
+
+//xóa tập phim
 app.delete("/movies/:movieId/episode/:episodeId", async (req, res) => {
   try {
     const { movieId, episodeId } = req.params;
@@ -91,6 +114,36 @@ app.delete("/movies/:movieId/episode/:episodeId", async (req, res) => {
   }
 });
 
+//cập nhật link từng tập phim
+app.put("/movies/:movieId/episode/:episodeId", async (req, res) => {
+  try {
+    const { movieId, episodeId } = req.params;
+    const episode = req.body;
+
+    const updatedMovie = await Movies.findOneAndUpdate(
+      { _id: movieId, "episode._id": episodeId },
+      {
+        $set: { "episode.$.link": episode.link },
+      },
+      { new: true }
+    );
+
+    if (!updatedMovie) {
+      return res
+        .status(404)
+        .json({ error: "Không tìm thấy phim hoặc tập phim!" });
+    }
+
+    res.json(updatedMovie);
+  } catch (error) {
+    console.error("Error updating episode:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the episode" });
+  }
+});
+
+//thêm 1 tập phim mới
 app.post("/movies/:movieId/episode", async (req, res) => {
   try {
     const { movieId } = req.params;
@@ -124,10 +177,23 @@ app.post("/movies/:movieId/episode", async (req, res) => {
   }
 });
 
+//them phim
 app.post("/movies", async (req, res) => {
-  const movies = new Movies(req.body);
-  await movies.save();
-  res.json(movies);
+  try {
+    const movies = new Movies(req.body);
+    await movies.save();
+    res.status(201).json(movies);
+  } catch (error) {
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      res.status(400).json({
+        message: `Phim '${error.keyValue[field]}' đã tồn tại. Vui lòng nhập phim khác!`,
+        field: field,
+      });
+    } else {
+      res.status(500).json({ message: "An error occurred", error });
+    }
+  }
 });
 
 app.listen(5000, () =>

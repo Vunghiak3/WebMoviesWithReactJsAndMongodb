@@ -1,0 +1,59 @@
+.wrapperDetailMovie {
+    padding: 20px;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    font-size: 1.8rem;
+}
+
+.innerMovieDetail {
+    display: flex;
+    gap: 50px;
+}
+
+.imgDetailMovie {
+    flex: 0.4;
+}
+
+.imgDetailMovie img {
+    width: 100%;
+}
+
+.contentDetailMovie {
+    flex: 1;
+}
+
+.titleDetailMovie {
+    color: #8b5cf6;
+    margin: 5px 0;
+    font-size: 2.2rem;
+}
+
+.tableDetailMovie {
+    text-align: left;
+    border-collapse: collapse;
+    width: 100%;
+    color: rgb(187, 185, 185);
+}
+
+.tableDetailMovie tr th {
+    width: 200px;
+    font-weight: normal;
+}
+
+.tableDetailMovie tr>* {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.493);
+    padding: 5px;
+}
+
+.descriptionDetailMovie {
+    margin-top: 20px;
+}
+
+.descriptionDetailMovie h2 {
+    color: #ff8802;
+}
+
+.descriptionDetailMovie p {
+    color: rgb(187, 185, 185);
+}

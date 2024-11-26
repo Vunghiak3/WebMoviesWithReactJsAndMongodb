@@ -1,10 +1,12 @@
 import styles from "./Dashboard.module.css";
 import { useEffect, useState } from "react";
+import { DetailMovie } from "./DetailMovie";
 
 export default function DashboardPage() {
   const [movies, setMovies] = useState([]);
   const [movieDetail, setMovieDetail] = useState([]);
   const [currentMode, setCurrentMode] = useState(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -15,14 +17,21 @@ export default function DashboardPage() {
         }
         const data = await response.json();
 
-        setMovies(data);
+        if (search !== "") {
+          const filteredMovies = data.filter((movie) =>
+            movie.name.toLowerCase().includes(search.toLowerCase())
+          );
+          setMovies(filteredMovies);
+        } else {
+          setMovies(data);
+        }
       } catch (error) {
         console.error("Error fetching data:", error.message);
       }
     };
 
     fetchApi();
-  }, []);
+  }, [search]);
 
   const handleShowDiaLog = () => {
     setCurrentMode(null);
@@ -42,15 +51,38 @@ export default function DashboardPage() {
     setCurrentMode("add");
   };
 
-  const handleRemoveMovie = (id) => {
-    console.log("🚀 ~ handleRemoveMovie ~ id:", id);
+  const handleRemoveMovie = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/movies/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error:", errorData.message);
+        alert(`Error: ${errorData.message}`);
+        return;
+      }
+
+      const result = await response.json();
+      setMovies((prevMovies) => prevMovies.filter((movie) => movie._id !== id));
+      alert("Xóa phim thành công!");
+    } catch (error) {
+      alert("Xóa phim khong thành công! Vui lòng thử lại!");
+      console.error("An error occurred while deleting the movie:", error);
+    }
   };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.actions}>
         <div className={styles.search}>
-          <input type="text" placeholder="Tìm kiếm..." />
+          <input
+            type="text"
+            placeholder="Tìm kiếm..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
         <div className={styles.btnWrapper}>
           <button className={styles.btnAdd} onClick={handleShowAddMovie}>
@@ -82,7 +114,11 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   </td>
-                  <td>{movie.status}</td>
+                  <td>
+                    {(movie.status === "??" &&
+                      `${movie.episode.length}/${movie.status}`) ||
+                      `${movie.status} (${movie.episode.length}/${movie.episode.length})`}
+                  </td>
                   <td>{movie.year}</td>
                   <td>
                     {movie.category.map((category) => category).join(", ")}
@@ -116,75 +152,26 @@ export default function DashboardPage() {
             >
               X
             </button>
-            {currentMode === "detail" && <DetaiMovie movie={movieDetail} />}
-            {currentMode === "update" && (
-              <UpdateMovie movie={movieDetail} setMovies={setMovies} />
+            {currentMode === "detail" && (
+              <DetailMovie
+                movie={movieDetail}
+                setMovies={setMovies}
+                setMode={setCurrentMode}
+              />
             )}
-            {currentMode === "add" && <AddMovie />}
+            {currentMode === "update" && (
+              <UpdateMovie
+                movie={movieDetail}
+                setMovies={setMovies}
+                setMode={setCurrentMode}
+              />
+            )}
+            {currentMode === "add" && (
+              <AddMovie setMovies={setMovies} setMode={setCurrentMode} />
+            )}
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-export function DetaiMovie({ movie }) {
-  return (
-    <div className={styles.wrapperDetailMovie}>
-      <div className={styles.innerMovieDetail}>
-        <div className={styles.imgDetailMovie}>
-          <img src={movie.image} alt={movie.name} />
-        </div>
-        <div className={styles.contentDetailMovie}>
-          <div className={styles.titleDetailMovie}>
-            <h1>{movie.name}</h1>
-          </div>
-          <table className={styles.tableDetailMovie}>
-            <tbody>
-              <tr>
-                <th>Trạng thái:</th>
-                <td>{movie.status}</td>
-              </tr>
-              <tr>
-                <th>Số tập:</th>
-                <td>
-                  {movie.episode.length > 0
-                    ? movie.episode.slice(-1)[0].name
-                    : "Chưa có tập phim"}
-                </td>
-              </tr>
-              <tr>
-                <th>Năm Phát Hành:</th>
-                <td>{movie.year}</td>
-              </tr>
-              <tr>
-                <th>Diễn Viên:</th>
-                <td>{movie.actor.map((actor) => actor).join(", ")}</td>
-              </tr>
-              <tr>
-                <th>Thể Loại:</th>
-                <td>{movie.category.map((category) => category).join(", ")}</td>
-              </tr>
-              <tr>
-                <th>Quốc Gia:</th>
-                <td>{movie.country.map((country) => country).join(", ")}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div className={styles.descriptionDetailMovie}>
-        <h2>Nội dung phim</h2>
-        <p>{movie.description}</p>
-      </div>
-      <div className={styles.episodeDetailMovie}>
-        <h2>Tập phim</h2>
-        <div className={styles.listButton}>
-          {movie.episode.map((item, index) => (
-            <button key={index}>{item.name}</button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
@@ -201,7 +188,7 @@ function toSlug(name) {
     .toLowerCase(); // Chuyển tất cả về chữ thường
 }
 
-export function UpdateMovie({ movie, setMovies }) {
+export function UpdateMovie({ movie, setMovies, setMode }) {
   const [image, setImage] = useState(movie.image);
   const [name, setName] = useState(movie.name);
   const [description, setDescription] = useState(movie.description);
@@ -216,10 +203,46 @@ export function UpdateMovie({ movie, setMovies }) {
   const [actor, setActor] = useState(
     movie.actor.map((actor) => actor).join(", ")
   );
-  const [message, setMessage] = useState("");
   const [episode, setEpisode] = useState(movie.episode);
   const [statusUpdate, setStatusUpdate] = useState(true);
   const [newEpisode, setNewEpisode] = useState("");
+  const [updateEpisode, setUpdateEpisode] = useState(null);
+
+  useEffect(() => {
+    const fetchUpdateEpisode = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/movies/${movie._id}/episode/${updateEpisode?._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updateEpisode),
+          }
+        );
+        if (response.ok) {
+          await response.json();
+          alert("Cập nhật tập phim thành công!");
+        } else {
+          alert("Cập nhật tập phim thất bại!");
+          console.error("Update failed:", response.statusText);
+        }
+      } catch (error) {
+        alert("Cập nhật tập phim không thành công!");
+        console.error("Error during update:", error);
+      }
+    };
+
+    if (updateEpisode) {
+      fetchUpdateEpisode();
+    }
+  }, [updateEpisode]);
+
+  const handleUpdateEpisode = async (id) => {
+    const episodeLink = episode.find((item) => item._id === id);
+    setUpdateEpisode(episodeLink);
+  };
 
   const handleUpdate = async () => {
     const updateMovie = {
@@ -232,7 +255,6 @@ export function UpdateMovie({ movie, setMovies }) {
       category: category.split(",").map((item) => item.trim()),
       country: country.split(",").map((item) => item.trim()),
       actor: actor.split(",").map((item) => item.trim()),
-      episode,
     };
 
     try {
@@ -249,25 +271,21 @@ export function UpdateMovie({ movie, setMovies }) {
 
       if (response.ok) {
         const result = await response.json();
-        setMessage("Cập nhật thành công!");
-        console.log("Updated movie:", result);
         setMovies((prevMovies) =>
           prevMovies.map((movie) => (movie._id === result._id ? result : movie))
         );
+        alert("Cập nhật thành công!");
       } else {
-        setMessage("Cập nhật thất bại!");
+        alert("Cập nhật thất bại!");
         console.error("Update failed:", response.statusText);
       }
     } catch (error) {
-      setMessage("Cập nhật không thành công!");
+      alert("Cập nhật không thành công!");
       console.error("Error during update:", error);
     }
   };
 
   const handleRemove = async (episodeId) => {
-    console.log("Movie ID:", movie._id);
-    console.log("Episode ID:", episodeId);
-
     try {
       const response = await fetch(
         `http://localhost:5000/movies/${movie._id}/episode/${episodeId}`,
@@ -278,24 +296,29 @@ export function UpdateMovie({ movie, setMovies }) {
 
       if (response.ok) {
         const updatedMovie = await response.json();
-        console.log("Updated movie:", updatedMovie);
         setEpisode((prevEpisodes) =>
           prevEpisodes.filter((episode) => episode._id !== episodeId)
         );
 
-        setMessage("Tập phim đã được xóa thành công!");
+        setMovies((prevMovies) =>
+          prevMovies.map((movie) =>
+            movie._id === updatedMovie._id ? updatedMovie : movie
+          )
+        );
+
+        alert("Tập phim đã được xóa thành công!");
       } else {
         throw new Error("Failed to delete episode.");
       }
     } catch (error) {
-      setMessage("Xóa tập phim không thành công!");
+      alert("Xóa tập phim không thành công!");
       console.error("Error during remove episode:", error);
     }
   };
 
   const handleAddNewEpisode = async (link) => {
     if (link === "") {
-      setMessage("Chưa thêm đường dẫn tập phim!");
+      alert("Chưa thêm đường dẫn tập phim!");
       return;
     }
     const newEpisode = {
@@ -317,20 +340,21 @@ export function UpdateMovie({ movie, setMovies }) {
         const updatedMovie = await response.json();
         setEpisode(updatedMovie.episode);
         setNewEpisode("");
-        setMessage("Tập phim đã được thêm thành công!");
         setMovies((prevMovies) =>
           prevMovies.map((movie) =>
             movie._id === updatedMovie._id ? updatedMovie : movie
           )
         );
+        alert("Tập phim đã được thêm thành công!");
       } else {
         throw new Error("Thêm tập phim thất bại");
       }
     } catch (error) {
-      setMessage("Có lỗi xảy ra khi thêm tập phim!");
+      alert("Có lỗi xảy ra khi thêm tập phim!");
       console.error("Error adding episode:", error);
     }
   };
+
   return (
     <div className={styles.wrapperUpdate}>
       <div className={styles.headerUpdate}>
@@ -462,6 +486,20 @@ export function UpdateMovie({ movie, setMovies }) {
                   />
                 </th>
               </tr>
+              <tr>
+                <th></th>
+                <th className={styles.functionUpdate}>
+                  <button
+                    className={styles.btnCancelUpdate}
+                    onClick={() => setMode(null)}
+                  >
+                    Hủy
+                  </button>
+                  <button className={styles.btnUpdate} onClick={handleUpdate}>
+                    Cập nhật
+                  </button>
+                </th>
+              </tr>
             </>
           ) : (
             <>
@@ -488,11 +526,19 @@ export function UpdateMovie({ movie, setMovies }) {
                   </th>
                   <th>
                     <button
-                      className={styles.btnRemoveEpisode}
-                      onClick={() => handleRemove(item._id)}
+                      className={styles.btnUpdateEpisode}
+                      onClick={() => handleUpdateEpisode(item._id)}
                     >
-                      Xóa
+                      Sửa
                     </button>
+                    {index === episode.length - 1 && (
+                      <button
+                        className={styles.btnRemoveEpisode}
+                        onClick={() => handleRemove(item._id)}
+                      >
+                        Xóa
+                      </button>
+                    )}
                   </th>
                 </tr>
               ))}
@@ -518,18 +564,8 @@ export function UpdateMovie({ movie, setMovies }) {
               </tr>
             </>
           )}
-          <tr>
-            <th></th>
-            <th className={styles.functionUpdate}>
-              <button className={styles.btnCancelUpdate}>Hủy</button>
-              <button className={styles.btnUpdate} onClick={handleUpdate}>
-                Cập nhật
-              </button>
-            </th>
-          </tr>
         </tbody>
       </table>
-      {message && <p>{message}</p>}
     </div>
   );
 }
@@ -539,7 +575,7 @@ export function UpdateMovie({ movie, setMovies }) {
 
 
 
-export function AddMovie() {
+export function AddMovie({ setMovies, setMode }) {
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -561,7 +597,6 @@ export function AddMovie() {
       country: country.split(",").map((item) => item.trim()),
       actor: actor.split(",").map((item) => item.trim()),
     };
-    console.log("🚀 ~ handleAddNewMovie ~ newMovie:", newMovie);
     try {
       const response = await fetch("http://localhost:5000/movies", {
         method: "POST",
@@ -572,9 +607,16 @@ export function AddMovie() {
       });
       if (response.ok) {
         const result = await response.json();
-        console.log("Add new movie:", result);
+        setMovies((prevMovies) => [...prevMovies, result]);
+        alert("Thêm phim thành công!");
+        setMode(null);
       } else {
-        console.error("Add new movie failed:", response.statusText);
+        const error = await response.json();
+        if (error.field) {
+          alert(`Error: ${error.message}`);
+        } else {
+          console.error("Add new movie failed:", response.statusText);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -699,7 +741,12 @@ export function AddMovie() {
           <tr>
             <th></th>
             <th className={styles.functionUpdate}>
-              <button className={styles.btnCancelUpdate}>Hủy</button>
+              <button
+                className={styles.btnCancelUpdate}
+                onClick={() => setMode(null)}
+              >
+                Hủy
+              </button>
               <button className={styles.btnUpdate} onClick={handleAddNewMovie}>
                 Thêm phim
               </button>
