@@ -17,30 +17,15 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("Connection error:", err));
 
-
-app.get("/movies/search", async (req, res) => {
-  const query = req.query.q || ""; // Lấy từ khóa tìm kiếm từ query params
-  try {
-    // Tìm kiếm phim trong MongoDB theo tên hoặc mô tả (sử dụng regex để tìm kiếm gần đúng)
-    const movies = await Movies.find({
-      $or: [
-        { name: { $regex: query, $options: "i" } }, // Tìm kiếm theo tên phim
-        { description: { $regex: query, $options: "i" } } // Tìm kiếm theo mô tả phim
-      ]
-    });
-    res.json(movies); // Trả về danh sách phim tìm được
-  } catch (error) {
-    console.error("Error searching movies:", error);
-    res.status(500).json({ error: "An error occurred while searching for movies" });
-  }
-});
-
-
-
-
 app.get("/movies", async (req, res) => {
   const movies = await Movies.find();
   res.json(movies);
+});
+
+app.get("/movies/:slug", async (req, res) => {
+  const { slug } = req.params;
+  const movie = await Movies.findOne({ slug });
+  res.json(movie);
 });
 
 //cập nhật phim

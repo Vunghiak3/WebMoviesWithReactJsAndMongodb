@@ -26,22 +26,7 @@ export function Header() {
 
         <div className="nav-menu">
           <a href={`/`} className="menu-item">
-            Trang chủ
-          </a>
-          <a href={`/danh-sach/phim-bo`} className="menu-item">
-            Phim bộ
-          </a>
-          <a href={`/danh-sach/phim-le`} className="menu-item">
-            Phim lẻ
-          </a>
-          <a href={`/danh-sach/tv-shows`} className="menu-item">
-            Shows
-          </a>
-          <a href={`/danh-sach/hoat-hinh`} className="menu-item">
-            Hoạt hình
-          </a>
-          <a href={`/danh-sach/phim-sap-chieu`} className="menu-item">
-            Sắp chiếu
+            Dashboard
           </a>
         </div>
       </div>
