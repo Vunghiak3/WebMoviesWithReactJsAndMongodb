@@ -103,7 +103,6 @@ export function Search() {
 
 export function MovieItem({ movie }) {
 
-  console.log(movie);
   return (
     <a className={"movie-result"} href={`/phim/${movie.slug}`}>
       <div className={"img-movie"}>

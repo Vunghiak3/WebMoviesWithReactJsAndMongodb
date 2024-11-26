@@ -21,8 +21,8 @@ export function DetailMovie({ movie }) {
               <tr>
                 <th>Số tập:</th>
                 <td>
-                  {movie.episode.length > 0
-                    ? movie.episode.slice(-1)[0].name
+                  {movie.episode?.length > 0
+                    ? movie.episode?.slice(-1)[0].name
                     : "Chưa có tập phim"}
                 </td>
               </tr>
@@ -32,15 +32,15 @@ export function DetailMovie({ movie }) {
               </tr>
               <tr>
                 <th>Diễn Viên:</th>
-                <td>{movie.actor.map((actor) => actor).join(", ")}</td>
+                <td>{movie.actor?.map((actor) => actor).join(", ")}</td>
               </tr>
               <tr>
                 <th>Thể Loại:</th>
-                <td>{movie.category.map((category) => category).join(", ")}</td>
+                <td>{movie.category?.map((category) => category).join(", ")}</td>
               </tr>
               <tr>
                 <th>Quốc Gia:</th>
-                <td>{movie.country.map((country) => country).join(", ")}</td>
+                <td>{movie.country?.map((country) => country).join(", ")}</td>
               </tr>
             </tbody>
           </table>
@@ -50,7 +50,7 @@ export function DetailMovie({ movie }) {
         <h2>Nội dung phim</h2>
         <p>{movie.description}</p>
       </div>
-      
+
       <Episode movie={movie} />
     </div>
   );
