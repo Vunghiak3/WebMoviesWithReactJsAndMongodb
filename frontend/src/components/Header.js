@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Header.css";
 
+
 export function Header() {
+
+
   return (
-    <header className={"wrapper"}>
-      <div className={"inner"}>
-        <div className={"header"}>
-          <div className={"logo"}>
+    <header className="wrapper">
+      <div className="inner">
+        <div className="header">
+          <div className="logo">
             <a href={`/`}>
               <img src="" alt="Ảnh logo" />
             </a>
@@ -14,30 +17,30 @@ export function Header() {
 
           <Search />
 
-          <div className={"actions"}>
-            <button to={"/login"} className={"btn-login"}>
+          <div className="actions">
+            <button to={"/login"} className="btn-login">
               Đăng nhập
             </button>
           </div>
         </div>
 
-        <div className={"nav-menu"}>
-          <a href={`/`} className={"menu-item"}>
+        <div className="nav-menu">
+          <a href={`/`} className="menu-item">
             Trang chủ
           </a>
-          <a href={`/danh-sach/phim-bo`} className={"menu-item"}>
+          <a href={`/danh-sach/phim-bo`} className="menu-item">
             Phim bộ
           </a>
-          <a href={`/danh-sach/phim-le`} className={"menu-item"}>
+          <a href={`/danh-sach/phim-le`} className="menu-item">
             Phim lẻ
           </a>
-          <a href={`/danh-sach/tv-shows`} className={"menu-item"}>
+          <a href={`/danh-sach/tv-shows`} className="menu-item">
             Shows
           </a>
-          <a href={`/danh-sach/hoat-hinh`} className={"menu-item"}>
+          <a href={`/danh-sach/hoat-hinh`} className="menu-item">
             Hoạt hình
           </a>
-          <a href={`/danh-sach/phim-sap-chieu`} className={"menu-item"}>
+          <a href={`/danh-sach/phim-sap-chieu`} className="menu-item">
             Sắp chiếu
           </a>
         </div>
@@ -50,32 +53,31 @@ export function Search() {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [showResult, setShowResult] = useState(false);
-  const debouncedValue = useDebounce(searchValue, 500);
 
   useEffect(() => {
-    if (debouncedValue === "") {
+    if (searchValue === "") {
       setSearchResult([]);
       setShowResult(false);
       return;
     }
 
-    const fechApi = async () => {
+    const fetchApi = async () => {
       try {
-        const response = await fetch(
-          `https://ophim1.com/v1/api/tim-kiem?keyword=${debouncedValue}`
-        );
+        const response = await fetch(`http://localhost:5000/movies`);
         const result = await response.json();
-        
-        setSearchResult(result.data.items);
+
+        const filteredMovies = result.filter((movie) =>
+          movie.name.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setSearchResult(filteredMovies);
         setShowResult(true);
-        
       } catch (error) {
-        console.error("Error fetching search results: ", error);
+        console.error("Error fetching all movies: ", error);
       }
     };
 
-    fechApi();
-  }, [debouncedValue]);
+    fetchApi();
+  }, [searchValue]);
 
   const handelChange = (e) => {
     const searchValue = e.target.value;
@@ -115,37 +117,25 @@ export function Search() {
 }
 
 export function MovieItem({ movie }) {
+
+  console.log(movie);
   return (
     <a className={"movie-result"} href={`/phim/${movie.slug}`}>
       <div className={"img-movie"}>
         <img
-          src={`https://img.ophim.live/uploads/movies/${movie.thumb_url}`}
+          src={movie.image}
           alt={movie.name}
         />
       </div>
       <div className={"title-movie"}>
         <p className={"name-movie"}>{movie.name}</p>
         <p className={"des-movie"}>
-          {movie.episode_current + " - " + movie.quality}
-        </p>
-        <p className={"genre-movie"}>
-          Thể loại: {movie.category.map((item) => item.name).join(", ")}
+          Trạng thái: {(movie.status === "??" &&
+            `${movie.episode.length}/${movie.status}`) ||
+            `${movie.status} (${movie.episode.length}/${movie.episode.length})`}
         </p>
       </div>
+
     </a>
   );
 }
-
-
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedValue(value), delay);
-
-    return () => clearTimeout(handler);
-  }, [value]);
-
-  return debouncedValue;
-}
-

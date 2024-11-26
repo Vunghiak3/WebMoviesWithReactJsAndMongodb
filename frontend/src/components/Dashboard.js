@@ -534,6 +534,11 @@ export function UpdateMovie({ movie, setMovies }) {
   );
 }
 
+
+
+
+
+
 export function AddMovie() {
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
@@ -703,5 +708,5 @@ export function AddMovie() {
         </tbody>
       </table>
     </div>
-  );
+  )
 }
