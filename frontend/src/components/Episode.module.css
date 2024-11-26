@@ -21,6 +21,10 @@
     border-radius: 3px;
     font-size: 1.6rem;
     transition: all linear 0.1s;
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .listButton a:hover {
