@@ -1,0 +1,85 @@
+.tableAddMovie {
+    width: 90%;
+    padding: 20px 10px;
+}
+
+.groupInput th:first-child {
+    text-align: left;
+    width: 200px;
+}
+
+.groupInput th:last-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.groupInput th:last-child img {
+    width: 100px;
+}
+
+.groupInput label {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.groupInput input {
+    background-color: rgba(255, 255, 255, 0.781);
+    border: 1px solid gray;
+    padding: 5px 10px;
+    font-size: 1.8rem;
+    color: black;
+}
+
+textarea {
+    resize: vertical;
+    width: 100%;
+    font-size: 1.8rem;
+    outline: none;
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.781);
+    border: 1px solid gray;
+    padding: 5px 10px;
+    font-size: 1.8rem;
+    color: black;
+}
+
+.functionAdd {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: right;
+    margin-top: 20px;
+}
+
+.btnCancel {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btnCancel:hover {
+    background-color: #d32f2f;
+}
+
+.btnAdd {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btnAdd:hover {
+    background-color: #388e3c;
+}

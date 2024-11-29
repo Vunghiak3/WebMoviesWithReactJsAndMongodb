@@ -1,5 +1,5 @@
 import styles from './DetailMovie.module.css'
-import Episode from './Episode';
+import Episode from '../Episode/Episode';
 
 export function DetailMovie({ movie }) {
   return (

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Header.css";
 
-
 export function Header() {
-
-
   return (
     <header className="wrapper">
       <div className="inner">
@@ -18,17 +15,20 @@ export function Header() {
           <Search />
 
           <div className="actions">
+            <a href={`/`} className="menu-item" style={{textDecoration: "underline"}}>
+              Quản lý phim
+            </a>
             <button to={"/login"} className="btn-login">
               Đăng nhập
             </button>
           </div>
         </div>
 
-        <div className="nav-menu">
+        {/* <div className="nav-menu">
           <a href={`/`} className="menu-item">
             Dashboard
           </a>
-        </div>
+        </div> */}
       </div>
     </header>
   );
@@ -102,24 +102,20 @@ export function Search() {
 }
 
 export function MovieItem({ movie }) {
-
   return (
     <a className={"movie-result"} href={`/phim/${movie.slug}`}>
       <div className={"img-movie"}>
-        <img
-          src={movie.image}
-          alt={movie.name}
-        />
+        <img src={movie.image} alt={movie.name} />
       </div>
       <div className={"title-movie"}>
         <p className={"name-movie"}>{movie.name}</p>
         <p className={"des-movie"}>
-          Trạng thái: {(movie.status === "??" &&
+          Trạng thái:{" "}
+          {(movie.status === "??" &&
             `${movie.episode.length}/${movie.status}`) ||
             `${movie.status} (${movie.episode.length}/${movie.episode.length})`}
         </p>
       </div>
-
     </a>
   );
 }

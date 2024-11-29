@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styles from "./Movie.module.css";
-import Episode from "./Episode";
+import styles from "./WatchMovie.module.css";
+import Episode from "../../components/Episode/Episode";
 
-export default function WatchMovie() {
+export default function WatchMoviePage() {
   const { slug, tapphim } = useParams();
   const [movie, setMovie] = useState([]);
   const [episode, setEpisode] = useState([]);

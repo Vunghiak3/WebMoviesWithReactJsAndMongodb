@@ -1,8 +1,8 @@
-import DashboardPage from "./components/Dashboard";
-import { Header } from "./components/Header";
+import DashboardPage from "./page/Dashboard/DashboardPage";
+import { Header } from "./components/Header/Header";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MoviePage from "./components/MoviePage";
-import WatchMovie from "./components/WatchMovie";
+import WatchMoviePage from "./page/WatchMovie/WatchMoviePage";
+import DetailMoviePage from "./page/DetailMovie/DetailMoviePage";
 
 function App() {
   return (
@@ -13,8 +13,8 @@ function App() {
         </div>
         <Routes>
           <Route path="/" element={<DashboardPage />} />
-          <Route path="/phim/:slug" element={<MoviePage />} />
-          <Route path="/phim/:slug/:tapphim" element={<WatchMovie />} />
+          <Route path="/phim/:slug" element={<DetailMoviePage />} />
+          <Route path="/phim/:slug/:tapphim" element={<WatchMoviePage />} />
         </Routes>
       </Router>
     </div>
